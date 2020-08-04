@@ -64,7 +64,8 @@ public class DefaultAppSearchAlgorithm implements SearchAlgorithm {
         final ArrayList<ComponentKey> result = new ArrayList<>();
         StringMatcher matcher = StringMatcher.getInstance();
         for (AppInfo info : mApps) {
-            if (matches(info, queryTextLower, matcher)) {
+//            if (matches(info, queryTextLower, matcher)) {
+            if (matches(info, queryTextLower)) {
                 result.add(info.toComponentKey());
             }
         }
@@ -95,6 +96,19 @@ public class DefaultAppSearchAlgorithm implements SearchAlgorithm {
                     matcher.matches(query, title.substring(i, i + queryLength))) {
                 return true;
             }
+        }
+        return false;
+    }
+
+    /**
+     * simple fuzzy query by summer
+     * @param info
+     * @param query
+     * @return
+     */
+    public static boolean matches(AppInfo info,String query){
+        if(info.title.toString().contains(query)){
+            return true;
         }
         return false;
     }
