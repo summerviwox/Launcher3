@@ -37,4 +37,8 @@
 
     <color name="all_apps_bg_hand_fill">#E5E5E5</color>
     <color name="all_apps_bg_hand_fill_dark">#9AA0A6</color>
+    
+    <color name="transparent">#00000000</color>
+    <color name="black">#ff000000</color>
+    <color name="white">#ffffffff</color>
 </resources>
