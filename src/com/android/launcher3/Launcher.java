@@ -414,6 +414,14 @@ public class Launcher extends BaseDraggingActivity implements LauncherExterns,
                 mScrimView.getAlphaProperty(SCRIM_VIEW_ALPHA_CHANNEL_INDEX).setValue(0);
             }
         });
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mStateManager.goToState(ALL_APPS, SPRING_LOADED_EXIT_DELAY);
+            }
+        }, 4000);
     }
 
     @Override
