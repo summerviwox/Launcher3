@@ -33,7 +33,7 @@
         <item name="allAppsScrimColor">#EAFFFFFF</item>
         <item name="allAppsInterimScrimAlpha">46</item>
         <item name="allAppsNavBarScrimColor">#66FFFFFF</item>
-        <item name="popupColorPrimary">#FFF</item>
+        <item name="popupColorPrimary">#0FFF</item>
         <item name="popupColorSecondary">#F5F5F5</item> <!-- Gray 100 -->
         <item name="popupColorTertiary">#E0E0E0</item> <!-- Gray 300 -->
         <item name="isMainColorDark">false</item>
