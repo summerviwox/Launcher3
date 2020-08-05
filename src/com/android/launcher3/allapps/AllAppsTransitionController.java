@@ -242,7 +242,8 @@ public class AllAppsTransitionController implements StateHandler, OnDeviceProfil
      */
     private void onProgressAnimationEnd() {
         if (Float.compare(mProgress, 1f) == 0) {
-            mAppsView.reset(false /* animate */);
+            //副屏切换后 不自动滑到顶部
+          //  mAppsView.reset(false /* animate */);
         } else if (isAllAppsExpanded()) {
             mAppsView.onScrollUpEnd();
         }
