@@ -113,6 +113,7 @@ import com.android.launcher3.notification.NotificationListener;
 import com.android.launcher3.popup.PopupContainerWithArrow;
 import com.android.launcher3.popup.PopupDataProvider;
 import com.android.launcher3.qsb.QsbContainerView;
+import com.android.launcher3.settings.SettingsActivity;
 import com.android.launcher3.states.InternalStateHandler;
 import com.android.launcher3.states.RotationHelper;
 import com.android.launcher3.touch.ItemClickHandler;
@@ -315,7 +316,8 @@ public class Launcher extends BaseDraggingActivity implements LauncherExterns,
 
         super.onCreate(savedInstanceState);
         TraceHelper.partitionSection("Launcher-onCreate", "super call");
-
+        //设置主屏副屏切换
+        FeatureFlags.ALL_APPS_SWIPE_STATE = Utilities.getPrefs(this).getBoolean(SettingsActivity.ALL_APPS_SWIPE_STATE,false);
         LauncherAppState app = LauncherAppState.getInstance(this);
         mOldConfig = new Configuration(getResources().getConfiguration());
         mModel = app.setLauncher(this);
@@ -1170,6 +1172,7 @@ public class Launcher extends BaseDraggingActivity implements LauncherExterns,
         BubbleTextView favorite = (BubbleTextView) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.app_icon, parent, false);
         favorite.applyFromWorkspaceItem(info);
+        //快捷方式点击事件
         favorite.setOnClickListener(ItemClickHandler.INSTANCE);
         favorite.setOnFocusChangeListener(mFocusHandler);
         return favorite;

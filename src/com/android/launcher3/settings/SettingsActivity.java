@@ -72,6 +72,11 @@ public class SettingsActivity extends Activity
 
     public static final String GRID_OPTIONS_PREFERENCE_KEY = "pref_grid_options";
 
+    /**
+     * {@link  com.android.launcher3.config.FeatureFlags.ALL_APPS_SWIPE_STATE}
+     */
+    public static final String ALL_APPS_SWIPE_STATE = "all_apps_swipe_state";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,23 +99,27 @@ public class SettingsActivity extends Activity
     }
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (GRID_OPTIONS_PREFERENCE_KEY.equals(key)) {
+        switch (key){
+            case GRID_OPTIONS_PREFERENCE_KEY:
+                final ComponentName cn = new ComponentName(getApplicationContext(),
+                        GridOptionsProvider.class);
+                Context c = getApplicationContext();
+                int oldValue = c.getPackageManager().getComponentEnabledSetting(cn);
+                int newValue;
+                if (Utilities.getPrefs(c).getBoolean(GRID_OPTIONS_PREFERENCE_KEY, false)) {
+                    newValue = PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
+                } else {
+                    newValue = PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
+                }
 
-            final ComponentName cn = new ComponentName(getApplicationContext(),
-                    GridOptionsProvider.class);
-            Context c = getApplicationContext();
-            int oldValue = c.getPackageManager().getComponentEnabledSetting(cn);
-            int newValue;
-            if (Utilities.getPrefs(c).getBoolean(GRID_OPTIONS_PREFERENCE_KEY, false)) {
-                newValue = PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
-            } else {
-                newValue = PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
-            }
-
-            if (oldValue != newValue) {
-                c.getPackageManager().setComponentEnabledSetting(cn, newValue,
-                        PackageManager.DONT_KILL_APP);
-            }
+                if (oldValue != newValue) {
+                    c.getPackageManager().setComponentEnabledSetting(cn, newValue,
+                            PackageManager.DONT_KILL_APP);
+                }
+                break;
+            case ALL_APPS_SWIPE_STATE:
+                FeatureFlags.ALL_APPS_SWIPE_STATE = sharedPreferences.getBoolean(key,false);
+                break;
         }
     }
 
@@ -196,6 +205,8 @@ public class SettingsActivity extends Activity
          */
         protected boolean initPreference(Preference preference) {
             switch (preference.getKey()) {
+                case ALL_APPS_SWIPE_STATE:
+                    return true;
                 case NOTIFICATION_DOTS_PREFERENCE_KEY:
                     if (!Utilities.ATLEAST_OREO ||
                             !getResources().getBoolean(R.bool.notification_dots_enabled)) {

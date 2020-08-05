@@ -44,9 +44,22 @@
         android:defaultValue="@bool/allow_rotation"
         android:persistent="true" />
 
+
     <SwitchPreference
         android:key="pref_grid_options"
         android:title="Enable grid options"
+        android:defaultValue="false"
+        android:persistent="true" />
+
+    <SwitchPreference
+        android:key="pref_grid_options"
+        android:title="Enable grid options"
+        android:defaultValue="false"
+        android:persistent="true" />
+
+    <SwitchPreference
+        android:key="all_apps_swipe_state"
+        android:title="允许滑动切换主屏副屏"
         android:defaultValue="false"
         android:persistent="true" />
 
