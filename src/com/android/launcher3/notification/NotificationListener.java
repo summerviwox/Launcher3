@@ -23,6 +23,7 @@ import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -31,6 +32,7 @@ import android.service.notification.StatusBarNotification;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -225,6 +227,14 @@ public class NotificationListener extends NotificationListenerService {
         if (sbn == null) {
             // There is a bug in platform where we can get a null notification; just ignore it.
             return;
+        }
+        if(sbn.getPackageName().equals("com.tencent.mm")){
+            Bundle bundle = sbn.getNotification().extras;
+            String title = bundle.getString(Notification.EXTRA_TITLE);
+            String text = bundle.getString(Notification.EXTRA_TEXT);
+            if(title.equals("呆逼")){
+                Toast.makeText(getApplicationContext(),text,Toast.LENGTH_LONG).show();
+            }
         }
         mWorkerHandler.obtainMessage(MSG_NOTIFICATION_POSTED, new NotificationPostedMsg(sbn))
             .sendToTarget();
