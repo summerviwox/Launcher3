@@ -228,14 +228,7 @@ public class NotificationListener extends NotificationListenerService {
             // There is a bug in platform where we can get a null notification; just ignore it.
             return;
         }
-        if(sbn.getPackageName().equals("com.tencent.mm")){
-            Bundle bundle = sbn.getNotification().extras;
-            String title = bundle.getString(Notification.EXTRA_TITLE);
-            String text = bundle.getString(Notification.EXTRA_TEXT);
-            if(title.equals("呆逼")){
-                Toast.makeText(getApplicationContext(),text,Toast.LENGTH_LONG).show();
-            }
-        }
+        NotificationHander.onNotificationPosted(getApplicationContext(),sbn);
         mWorkerHandler.obtainMessage(MSG_NOTIFICATION_POSTED, new NotificationPostedMsg(sbn))
             .sendToTarget();
         if (sStatusBarNotificationsChangedListener != null) {
