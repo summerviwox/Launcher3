@@ -187,6 +187,8 @@ public class Folder extends AbstractFloatingView implements ClipPathView, DragSo
     @Thunk int mScrollHintDir = SCROLL_NONE;
     @Thunk int mCurrentScrollDir = SCROLL_NONE;
 
+
+    public int  replaceFolderWithFinalItemCount = 0;//是否允许文件夹只有一个文件
     /**
      * Used to inflate the Workspace from XML.
      *
@@ -409,7 +411,7 @@ public class Folder extends AbstractFloatingView implements ClipPathView, DragSo
         }
         // In case any children didn't come across during loading, clean up the folder accordingly
         mFolderIcon.post(() -> {
-            if (getItemCount() <= 1) {
+            if (getItemCount() <= replaceFolderWithFinalItemCount) {
                 replaceFolderWithFinalItem();
             }
         });
@@ -699,7 +701,7 @@ public class Folder extends AbstractFloatingView implements ClipPathView, DragSo
             rearrangeChildren();
             mRearrangeOnClose = false;
         }
-        if (getItemCount() <= 1) {
+        if (getItemCount() <= replaceFolderWithFinalItemCount) {
             if (!mDragInProgress && !mSuppressFolderDeletion) {
                 replaceFolderWithFinalItem();
             } else if (mDragInProgress) {
@@ -1285,7 +1287,7 @@ public class Folder extends AbstractFloatingView implements ClipPathView, DragSo
         } else {
             rearrangeChildren();
         }
-        if (getItemCount() <= 1) {
+        if (getItemCount() <= replaceFolderWithFinalItemCount) {
             if (mIsOpen) {
                 close(true);
             } else {
