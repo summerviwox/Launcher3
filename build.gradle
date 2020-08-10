@@ -150,8 +150,10 @@ dependencies {
     implementation "androidx.dynamicanimation:dynamicanimation:${ANDROID_X_VERSION}"
     implementation "androidx.recyclerview:recyclerview:${ANDROID_X_VERSION}"
     implementation "androidx.preference:preference:${ANDROID_X_VERSION}"
+    implementation "androidx.cardview:cardview:${ANDROID_X_VERSION}"
     implementation project(':IconLoader')
     implementation fileTree(dir: "${ANDROID_TOP}/libs", include: 'launcher_protos.jar')
+    implementation project(path: ':logic')
 
     // Recents lib dependency
     withQuickstepImplementation fileTree(dir: "${ANDROID_TOP}/quickstep/libs", include: 'sysui_shared.jar')

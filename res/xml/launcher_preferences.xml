@@ -69,4 +69,5 @@
         android:title="Developer Options"
         android:fragment="com.android.launcher3.settings.DeveloperOptionsFragment"/>
 
+
 </androidx.preference.PreferenceScreen>
