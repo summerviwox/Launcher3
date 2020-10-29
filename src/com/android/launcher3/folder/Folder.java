@@ -188,7 +188,7 @@ public class Folder extends AbstractFloatingView implements ClipPathView, DragSo
     @Thunk int mCurrentScrollDir = SCROLL_NONE;
 
 
-    public int  replaceFolderWithFinalItemCount = 0;//是否允许文件夹只有一个文件
+    public int  replaceFolderWithFinalItemCount = 1;//是否允许文件夹只有一个文件
     /**
      * Used to inflate the Workspace from XML.
      *

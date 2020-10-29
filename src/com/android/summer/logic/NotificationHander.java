@@ -2,11 +2,14 @@ package com.android.summer.logic;
 
 import android.app.Notification;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.AlarmClock;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.launcher3.SessionCommitReceiver;
 import com.android.launcher3.logging.LoggerUtils;
 import com.summer.logic.HttpUtil;
 
@@ -27,6 +30,8 @@ public class NotificationHander {
         Bundle bundle = sbn.getNotification().extras;
         switch (sbn.getPackageName()){
             case "com.android.deskclock":
+
+
                 //闹铃服务 添加特定闹铃召唤相关逻辑
                 switch (bundle.getString(Notification.EXTRA_TEXT)){
                     case SHUT_DOWN_WINDOWS:

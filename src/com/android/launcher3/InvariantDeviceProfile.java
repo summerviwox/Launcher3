@@ -60,6 +60,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+/**
+ * 获取硬件参数
+ */
 public class InvariantDeviceProfile {
 
     public static final String TAG = "IDP";

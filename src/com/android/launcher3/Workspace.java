@@ -1955,8 +1955,7 @@ public class Workspace extends PagedView<WorkspacePageIndicator>
     }
 
     public void onNoCellFound(View dropTargetLayout) {
-        int strId = mLauncher.isHotseatLayout(dropTargetLayout)
-                ? R.string.hotseat_out_of_space : R.string.out_of_space;
+        int strId = mLauncher.isHotseatLayout(dropTargetLayout) ? R.string.hotseat_out_of_space : R.string.out_of_space;
         Toast.makeText(mLauncher, mLauncher.getString(strId), Toast.LENGTH_SHORT).show();
     }
 

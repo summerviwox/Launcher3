@@ -125,7 +125,6 @@ public abstract class BaseLoaderResults {
                 otherAppWidgets);
         sortWorkspaceItemsSpatially(currentWorkspaceItems);
         sortWorkspaceItemsSpatially(otherWorkspaceItems);
-
         // Tell the workspace that we're about to start binding items
         executeCallbacksTask(c -> {
             c.clearPendingBinds();

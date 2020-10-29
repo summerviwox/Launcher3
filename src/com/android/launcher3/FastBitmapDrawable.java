@@ -32,10 +32,12 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.util.Property;
 import android.util.SparseArray;
 
 import com.android.launcher3.icons.BitmapInfo;
+import com.android.launcher3.logging.LoggerUtils;
 
 public class FastBitmapDrawable extends Drawable {
 
@@ -89,6 +91,7 @@ public class FastBitmapDrawable extends Drawable {
     private int mBrightness = 0;
     private int mAlpha = 255;
     private int mPrevUpdateKey = Integer.MAX_VALUE;
+    private ItemInfoWithIcon info;
 
     public FastBitmapDrawable(Bitmap b) {
         this(b, Color.TRANSPARENT);
@@ -100,6 +103,7 @@ public class FastBitmapDrawable extends Drawable {
 
     public FastBitmapDrawable(ItemInfoWithIcon info) {
         this(info.iconBitmap, info.iconColor);
+        this.info = info;
     }
 
     protected FastBitmapDrawable(Bitmap b, int iconColor) {
@@ -127,7 +131,10 @@ public class FastBitmapDrawable extends Drawable {
     }
 
     protected void drawInternal(Canvas canvas, Rect bounds) {
-        canvas.drawBitmap(mBitmap, null, bounds, mPaint);
+
+        canvas.drawBitmap(mBitmap, null, new Rect(bounds.left,bounds.top,bounds.right,bounds.bottom), mPaint);
+//        Log.e("FastBitmapDrawable",info==null?"null":info.title.toString());
+//        Log.e("drawInternal",bounds.left+":"+bounds.top+":"+bounds.right+":"+bounds.bottom);
     }
 
     @Override
