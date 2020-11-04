@@ -16,12 +16,15 @@
 
 package com.android.launcher3.widget;
 
+import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProviderInfo;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.PointF;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -33,6 +36,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.AdapterView;
 import android.widget.Advanceable;
 import android.widget.RemoteViews;
+import android.widget.TextView;
 
 import com.android.launcher3.CheckLongPressHelper;
 import com.android.launcher3.ItemInfo;
@@ -47,6 +51,9 @@ import com.android.launcher3.dragndrop.DragLayer;
 import com.android.launcher3.util.Executors;
 import com.android.launcher3.util.Themes;
 import com.android.launcher3.views.BaseDragLayer.TouchCompleteListener;
+
+import static android.content.ContentValues.TAG;
+import static android.util.Config.LOGD;
 
 /**
  * {@inheritDoc}
@@ -412,4 +419,56 @@ public class LauncherAppWidgetHostView extends NavigableAppWidgetHostView
         }
         return false;
     }
+
+/*    @Override
+    protected View getDefaultView() {
+        //因为super.getDefaultView() defaultView.setOnClickListener(this::onDefaultViewClicked); 导致报错 单独处理
+        if(!"Launcher3".equals(getAppWidgetInfo().label)){
+            return super.getDefaultView();
+        }
+        if (LOGD) {
+            Log.d(TAG, "getDefaultView");
+        }
+        View defaultView = null;
+        Exception exception = null;
+
+        try {
+            if (getAppWidgetInfo() != null) {
+                Context theirContext = getContext();
+                LayoutInflater inflater = (LayoutInflater)
+                        theirContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                inflater = inflater.cloneInContext(theirContext);
+                inflater.setFilter( (clazz) -> clazz.isAnnotationPresent(RemoteViews.RemoteView.class));
+                AppWidgetManager manager = AppWidgetManager.getInstance(getContext());
+                Bundle options = manager.getAppWidgetOptions(getAppWidgetId());
+
+                int layoutId = getAppWidgetInfo() .initialLayout;
+                if (options.containsKey(AppWidgetManager.OPTION_APPWIDGET_HOST_CATEGORY)) {
+                    int category = options.getInt(AppWidgetManager.OPTION_APPWIDGET_HOST_CATEGORY);
+                    if (category == AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD) {
+                        int kgLayoutId = getAppWidgetInfo() .initialKeyguardLayout;
+                        // If a default keyguard layout is not specified, use the standard
+                        // default layout.
+                        layoutId = kgLayoutId == 0 ? layoutId : kgLayoutId;
+                    }
+                }
+                defaultView = inflater.inflate(layoutId, this, false);
+            } else {
+                Log.w(TAG, "can't inflate defaultView because mInfo is missing");
+            }
+        } catch (RuntimeException e) {
+            exception = e;
+        }
+
+        if (exception != null) {
+            Log.w(TAG, "Error inflating AppWidget " + getAppWidgetInfo()  + ": " + exception.toString());
+        }
+
+        if (defaultView == null) {
+            if (LOGD) Log.d(TAG, "getDefaultView couldn't find any view, so inflating error");
+            defaultView = getErrorView();
+        }
+
+        return defaultView;
+    }*/
 }

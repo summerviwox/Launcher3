@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:gravity="center"
+    android:background="@color/white"
+    android:elevation="4dp"
+    android:id="@+id/root"
+    android:clickable="false"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:gravity="center"
+        android:background="#454545"
+        android:clickable="false"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/text"
+            android:gravity="center"
+            android:text="法钢结构及高级【偶尔解放咯IG加热【万分感激【"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</LinearLayout>

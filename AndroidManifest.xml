@@ -46,6 +46,7 @@
         attributes and intent filters the same
         -->
         <activity
+            android:exported="true"
             android:name="com.android.launcher3.Launcher"
             android:launchMode="singleTask"
             android:clearTaskOnLaunch="true"
@@ -59,7 +60,7 @@
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.HOME" />
+<!--                <category android:name="android.intent.category.HOME" />-->
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.MONKEY"/>
                 <category android:name="android.intent.category.LAUNCHER_APP" />

@@ -303,6 +303,7 @@ public class Launcher extends BaseDraggingActivity implements LauncherExterns,
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         RaceConditionTracker.onEvent(ON_CREATE_EVT, ENTER);
+        //严格模式调试
         if (DEBUG_STRICT_MODE) {
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
                     .detectDiskReads()
@@ -318,7 +319,6 @@ public class Launcher extends BaseDraggingActivity implements LauncherExterns,
                     .build());
         }
         TraceHelper.beginSection("Launcher-onCreate");
-
         super.onCreate(savedInstanceState);
         TraceHelper.partitionSection("Launcher-onCreate", "super call");
         //设置主屏副屏切换

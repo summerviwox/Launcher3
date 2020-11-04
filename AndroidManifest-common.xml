@@ -44,7 +44,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
     <uses-permission android:name="android.permission.READ_DEVICE_CONFIG" />
-
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <!--
     Permissions required for read/write access to the workspace data. These permission name
@@ -167,6 +167,7 @@
         The settings activity. To extend point settings_fragment_name to appropriate fragment class
         -->
         <activity
+            android:exported="true"
             android:name="com.android.launcher3.settings.SettingsActivity"
             android:label="@string/settings_button_text"
             android:theme="@style/HomeSettingsTheme"
@@ -189,13 +190,22 @@
         <activity android:name="com.android.summer.logic.LogicActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-<!--                <category android:name="android.intent.category.HOME" />-->
+                <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.MONKEY"/>
-<!--                <category android:name="android.intent.category.LAUNCHER_APP" />-->
+                <category android:name="android.intent.category.LAUNCHER_APP" />
             </intent-filter>
         </activity>
 
+        <receiver android:name="com.android.summer.appwidget.TimeWidget" android:exported="true" android:enabled="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/timewidget"/>
+            <intent-filter>
+                <action android:name="com.android.launcher3.TimeWidget"/>
+            </intent-filter>
+        </receiver>
 
     </application>
 </manifest>
