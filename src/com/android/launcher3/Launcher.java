@@ -151,6 +151,7 @@ import com.android.launcher3.widget.WidgetHostViewLoader;
 import com.android.launcher3.widget.WidgetListRowEntry;
 import com.android.launcher3.widget.WidgetsFullSheet;
 import com.android.launcher3.widget.custom.CustomWidgetManager;
+import com.android.summer.service.BackRun;
 import com.summer.logic.HttpUtil;
 
 import java.io.FileDescriptor;
@@ -421,6 +422,8 @@ public class Launcher extends BaseDraggingActivity implements LauncherExterns,
                 mScrimView.getAlphaProperty(SCRIM_VIEW_ALPHA_CHANNEL_INDEX).setValue(0);
             }
         });
+
+        BackRun.getBackRun().start(this);
     }
 
     @Override

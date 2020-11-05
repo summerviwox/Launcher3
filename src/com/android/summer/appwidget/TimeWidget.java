@@ -18,7 +18,6 @@ public class TimeWidget extends AppWidgetProvider {
 
     public static final String myaction= "com.android.launcher3.TimeWidget";
 
-    int i=0;
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
@@ -36,9 +35,9 @@ public class TimeWidget extends AppWidgetProvider {
             //不能直接设置监听，所以需要通过远程视图进行设置,appwidget_layout为显示在桌面的视图
             RemoteViews rv=new RemoteViews(context.getPackageName(), R.layout.layout_time);
             Intent intent = new Intent(context,SettingsActivity.class);
-            PendingIntent pendingIntent=PendingIntent.getActivity(context, (int) (System.currentTimeMillis()/1000),intent, PendingIntent.FLAG_UPDATE_CURRENT);//转到MainActivity
+            PendingIntent pendingIntent=PendingIntent.getBroadcast(context, (int) (System.currentTimeMillis()/1000),intent, PendingIntent.FLAG_UPDATE_CURRENT);//转到MainActivity
             rv.setOnClickPendingIntent(R.id.root, pendingIntent);//为btn_widget设置单击事件为intent
-            rv.setTextViewText(R.id.text,(i++)+"");
+            rv.setTextViewText(R.id.text,(System.currentTimeMillis())+"");
             appWidgetManager.updateAppWidget(appWidgetIds[i], rv);//更新数据到这个小部件
         }//为每个拖拽出来的小部件设置单击事件
     }

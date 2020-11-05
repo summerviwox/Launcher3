@@ -186,6 +186,8 @@ public class CellLayout extends ViewGroup implements Transposable {
     private boolean mUseTouchHelper = false;
     private RotationMode mRotationMode = RotationMode.NORMAL;
 
+    private Paint paint = new Paint();//
+
     public CellLayout(Context context) {
         this(context, null);
     }
@@ -502,6 +504,8 @@ public class CellLayout extends ViewGroup implements Transposable {
                 canvas.restore();
             }
         }
+        paint.setColor(Color.RED);
+       // canvas.drawRect(10,10,getWidth()-10,getHeight()-10,paint);
     }
 
     public void addFolderBackground(PreviewBackground bg) {

@@ -20,6 +20,9 @@ import static android.view.MotionEvent.ACTION_DOWN;
 
 import android.app.WallpaperManager;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.View;
@@ -52,6 +55,7 @@ public class ShortcutAndWidgetContainer extends ViewGroup {
         mActivity = ActivityContext.lookupContext(context);
         mWallpaperManager = WallpaperManager.getInstance(context);
         mContainerType = containerType;
+        //setBackgroundColor(getResources().getColor(R.color.white));
     }
 
     public void setCellDimensions(int cellWidth, int cellHeight, int countX, int countY) {
@@ -211,5 +215,12 @@ public class ShortcutAndWidgetContainer extends ViewGroup {
             final View child = getChildAt(i);
             child.cancelLongPress();
         }
+    }
+
+    Paint paint = new Paint();
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
     }
 }

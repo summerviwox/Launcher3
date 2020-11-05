@@ -420,7 +420,17 @@ public class LauncherAppWidgetHostView extends NavigableAppWidgetHostView
         return false;
     }
 
-/*    @Override
+//    @Override
+//    protected View getDefaultView() {
+//        if(!"Launcher3".equals(getAppWidgetInfo().label)){
+//            return super.getDefaultView();
+//        }else{
+//            View view = LayoutInflater.from(getContext()).inflate(R.layout.layout_mytime,null,false);
+//            return view;
+//        }
+//    }
+
+    /*    @Override
     protected View getDefaultView() {
         //因为super.getDefaultView() defaultView.setOnClickListener(this::onDefaultViewClicked); 导致报错 单独处理
         if(!"Launcher3".equals(getAppWidgetInfo().label)){
