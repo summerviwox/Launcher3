@@ -73,8 +73,8 @@ public class BackRun {
         Log.e("run","run");
         //Toast.makeText(context,Calendar.getInstance().get(Calendar.HOUR)+":"+Calendar.getInstance().get(Calendar.MINUTE),Toast.LENGTH_LONG).show();
         int mins = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)<6?Calendar.getInstance().get(Calendar.HOUR_OF_DAY)*60+Calendar.getInstance().get(Calendar.MINUTE)+12*60:Calendar.getInstance().get(Calendar.HOUR_OF_DAY)*60+Calendar.getInstance().get(Calendar.MINUTE);
-        int startmins = 6*60;//圆弧6点起点
         boolean dayOrNight = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)>=6&&Calendar.getInstance().get(Calendar.HOUR_OF_DAY)<18;
+        int startmins =dayOrNight? 6*60:18*60;//圆弧6点起点
         //Toast.makeText(context,""+i,Toast.LENGTH_LONG).show();
         ComponentName componentName = new ComponentName(context,TimeWidget.class);
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
@@ -119,7 +119,7 @@ public class BackRun {
             paint.setColor(dayColor);
             canvas.drawArc(sw/2,sw/2,l-sw/2,l-sw/2,0,360,false,paint);
             paint.setColor(nightColor);
-            canvas.drawArc(sw/2+distance,sw/2+distance,l-sw/2-distance,l-sw/2-distance,90,(mins-startmins)/2+90,false,paint);
+            canvas.drawArc(sw/2+distance,sw/2+distance,l-sw/2-distance,l-sw/2-distance,90,(mins-startmins)/2,false,paint);
         }
 
         //外表盘圆框
