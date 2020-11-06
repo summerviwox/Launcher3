@@ -61,7 +61,7 @@ public class BackRun {
 
     private void run(Context context){
         //Toast.makeText(context,Calendar.getInstance().get(Calendar.HOUR)+":"+Calendar.getInstance().get(Calendar.MINUTE),Toast.LENGTH_LONG).show();
-        int mins = Calendar.getInstance().get(Calendar.HOUR)*60+Calendar.getInstance().get(Calendar.MINUTE);
+        int mins = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)<6?Calendar.getInstance().get(Calendar.HOUR_OF_DAY)*60+Calendar.getInstance().get(Calendar.MINUTE)+24*60:Calendar.getInstance().get(Calendar.HOUR_OF_DAY)*60+Calendar.getInstance().get(Calendar.MINUTE);
         int startmins = 6*60;//圆弧6点起点
         boolean dayOrNight = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)>=6&&Calendar.getInstance().get(Calendar.HOUR_OF_DAY)<18;
         //Toast.makeText(context,""+i,Toast.LENGTH_LONG).show();
