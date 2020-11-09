@@ -20,11 +20,20 @@ import androidx.cardview.widget.CardView;
 import com.android.launcher3.R;
 import com.android.summer.appwidget.Event;
 import com.android.summer.appwidget.TimeWidget;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.summer.logic.Alarm;
+import com.summer.logic.HttpUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class BackRun {
 
@@ -38,13 +47,12 @@ public class BackRun {
 
     int time = 60*1000;
 
+    String[] colors = new String[]{"#FF69B4","#BA55D3","#8A2BE2","#0000FF","#F0FFFF","#00FA9A","#228B22","#FFFF00","#FFD700","#F5DEB3","#FF8C00","#A0522D","#BC8F8F","#FFFFFF","#006400","#8A2BE2"};
+
     ArrayList<Event> events = new ArrayList<>();
 
     private BackRun(){
         runnable= null;
-        events.add(new Event(1,0,"睡觉"));
-        events.add(new Event(8,30,"起床"));
-        events.add(new Event(18,10,"下班"));
     }
 
     public static BackRun getBackRun(){
@@ -55,6 +63,30 @@ public class BackRun {
     }
 
     public void start(Context context){
+        events = new Gson().fromJson(context.getSharedPreferences("launcer3",Context.MODE_PRIVATE).getString("alarms","[]"),new TypeToken<List<Event>>(){}.getType());
+        HttpUtil.getInstance().selectAll().enqueue(new Callback<List<Alarm>>() {
+            @Override
+            public void onResponse(Call<List<Alarm>> call, Response<List<Alarm>> response) {
+                if(response.isSuccessful()||response.body()!=null){
+                    List<Alarm> alarms = response.body();
+                    events.clear();
+                    for(int i=0;i<alarms.size();i++){
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTime(new Date(alarms.get(i).getStarttime()));
+                        Calendar calendar2 = Calendar.getInstance();
+                        calendar2.setTime(new Date(alarms.get(i).getEndtime()));
+                        events.add(new Event(calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),calendar2.get(Calendar.HOUR_OF_DAY),calendar2.get(Calendar.MINUTE),alarms.get(i).getText()));
+                    }
+                    context.getSharedPreferences("launcer3",Context.MODE_PRIVATE).edit().putString("alarms",new Gson().toJson(events)).commit();
+                }
+                BackRun.this.run(context);
+            }
+
+            @Override
+            public void onFailure(Call<List<Alarm>> call, Throwable t) {
+
+            }
+        });
         BackRun.this.run(context);
         if(runnable==null){
             runnable = new Runnable() {
@@ -69,12 +101,39 @@ public class BackRun {
         handler.postDelayed(runnable, (60-Calendar.getInstance().get(Calendar.SECOND))*1000);
     }
 
+    public void refresh(Context context){
+        HttpUtil.getInstance().selectAll().enqueue(new Callback<List<Alarm>>() {
+            @Override
+            public void onResponse(Call<List<Alarm>> call, Response<List<Alarm>> response) {
+                if(response.isSuccessful()||response.body()!=null){
+                    List<Alarm> alarms = response.body();
+                    events.clear();
+                    for(int i=0;i<alarms.size();i++){
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTime(new Date(alarms.get(i).getStarttime()));
+                        Calendar calendar2 = Calendar.getInstance();
+                        calendar2.setTime(new Date(alarms.get(i).getEndtime()));
+                        events.add(new Event(calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),calendar2.get(Calendar.HOUR_OF_DAY),calendar2.get(Calendar.MINUTE),alarms.get(i).getText()));
+                    }
+                    context.getSharedPreferences("launcer3",Context.MODE_PRIVATE).edit().putString("alarms",new Gson().toJson(events)).commit();
+                }
+                BackRun.this.run(context);
+            }
+
+            @Override
+            public void onFailure(Call<List<Alarm>> call, Throwable t) {
+
+            }
+        });
+    }
+
+
     private void run(Context context){
         Log.e("run","run");
         //Toast.makeText(context,Calendar.getInstance().get(Calendar.HOUR)+":"+Calendar.getInstance().get(Calendar.MINUTE),Toast.LENGTH_LONG).show();
-        int mins = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)<6?Calendar.getInstance().get(Calendar.HOUR_OF_DAY)*60+Calendar.getInstance().get(Calendar.MINUTE)+12*60:Calendar.getInstance().get(Calendar.HOUR_OF_DAY)*60+Calendar.getInstance().get(Calendar.MINUTE);
-        boolean dayOrNight = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)>=6&&Calendar.getInstance().get(Calendar.HOUR_OF_DAY)<18;
-        int startmins =dayOrNight? 6*60:18*60;//圆弧6点起点
+        int mins = getMins(Calendar.getInstance().get(Calendar.HOUR_OF_DAY),Calendar.getInstance().get(Calendar.MINUTE));
+        int startmins =dayOrNight(Calendar.getInstance().get(Calendar.HOUR_OF_DAY))? 6*60:18*60;//圆弧6点起点
+        int arucstartmins =3*60;//圆弧3点起点
         //Toast.makeText(context,""+i,Toast.LENGTH_LONG).show();
         ComponentName componentName = new ComponentName(context,TimeWidget.class);
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
@@ -84,12 +143,12 @@ public class BackRun {
         int l = 1000;
         int width = (int) (1.4*l);
         int linewidth =4;//一般线条宽度
-        int padding = 0;
+        int padding = 30;
         int length = 50;//刻度长度
         int cx = l/2;//圆心x
         int cy = l/2;//圆心y
         int outradius = l/2;//大圆半径
-        int distance = 20;//圆弧宽度
+        int distance = 40;//圆弧宽度
         int innerradius = l/2 - distance;//内圆半径
         int centerradius = innerradius - distance;//中心圆半径
         Bitmap bitmap =Bitmap.createBitmap((int) (width+padding),l+padding,Bitmap.Config.ARGB_8888);
@@ -102,24 +161,24 @@ public class BackRun {
         int dayColor = Color.parseColor("#39B9E0");
         int nightColor = Color.parseColor("#F1B962");
         int dotColor =  Color.parseColor("#FF0000");
-        int dayOrNightColor = dayOrNight?dayColor:nightColor;
+        int dayOrNightColor = dayOrNight(Calendar.getInstance().get(Calendar.HOUR_OF_DAY))?dayColor:nightColor;
 
        // canvas.drawColor(Color.parseColor("#FFB6C1"));
 
-        canvas.save();
-        canvas.translate((float) (width-l)/2,0);
-
+        canvas.save();//------------------------------------
+        canvas.translate((float) (width-l)/2,padding);
+        paint.setTextSize(40);
         //世间进度
         int sw = distance;
         paint.setStrokeWidth(distance);
-        if(dayOrNight){
+        if(dayOrNight(Calendar.getInstance().get(Calendar.HOUR_OF_DAY))){
             paint.setColor(dayColor);
-            canvas.drawArc(sw/2,sw/2,l-sw/2,l-sw/2,90,(mins-startmins)/2,false,paint);
+            canvas.drawArc(sw/2,sw/2,l-sw/2,l-sw/2,90,timeToDegree(mins-startmins),false,paint);
         }else{
             paint.setColor(dayColor);
             canvas.drawArc(sw/2,sw/2,l-sw/2,l-sw/2,0,360,false,paint);
             paint.setColor(nightColor);
-            canvas.drawArc(sw/2+distance,sw/2+distance,l-sw/2-distance,l-sw/2-distance,90,(mins-startmins)/2,false,paint);
+            canvas.drawArc(sw/2+distance,sw/2+distance,l-sw/2-distance,l-sw/2-distance,90,timeToDegree(mins-startmins),false,paint);
         }
 
         //外表盘圆框
@@ -147,7 +206,6 @@ public class BackRun {
         paint.setStyle(Paint.Style.STROKE);
 
         //盘刻度
-        paint.setTextSize(40);
         paint.setColor(Color.parseColor("#FF0000"));
         for(int i=0;i<60;i++){
             canvas.save();
@@ -161,7 +219,6 @@ public class BackRun {
             }
             canvas.restore();
         }
-
 
         //小时数字
         paint.setStyle(Paint.Style.FILL);
@@ -179,55 +236,101 @@ public class BackRun {
         paint.setStyle(Paint.Style.STROKE);
 
         //小时刻度
+        canvas.save();
         paint.setStrokeWidth(linewidth*4);
         paint.setColor(dayOrNightColor);
-        canvas.save();
         canvas.rotate(mins/2,cx,cy);
         canvas.drawLine(cx,cy,l/2,l/4 ,paint);
         canvas.restore();
 
         //分钟刻度
-        paint.setStrokeWidth(linewidth*2);
         canvas.save();
+        paint.setStrokeWidth(linewidth*2);
         paint.setColor(dayOrNightColor);
         canvas.rotate(mins*6,cx,cy);
-        canvas.drawLine(cx,cy,l/2,dayOrNight?distance*2+linewidth*2:distance*2+linewidth*2,paint);
+        canvas.drawLine(cx,cy,l/2,dayOrNight(Calendar.getInstance().get(Calendar.HOUR_OF_DAY))?distance*2+linewidth*2:distance*2+linewidth*2,paint);
         canvas.restore();
 
 
+        //画点
         paint.setColor(dotColor);
         paint.setStyle(Paint.Style.FILL);
-        //Log.e("getXY",l+":"+linewidth);
         paint.setTextSize(50);
         for(int i=0;i<events.size();i++){
-            int[] xy = getXY(events.get(i),l/2,dayOrNight(events.get(i))?outradius-distance/2:innerradius-distance/2);
+            int[] xy = getXY(events.get(i),l/2,dayOrNight(events.get(i).hours)?outradius-distance/2:innerradius-distance/2);
             canvas.drawCircle(xy[0],xy[1],linewidth*2,paint);
-//            canvas.save();
-//            canvas.rotate((getMins(events.get(i))-startmins)/2,l/2,l/2);
-//            canvas.drawCircle(l/2,dayOrNight(events.get(i))?l-distance/2:l-distance*3/2,linewidth,paint);
+        }
 
-            //canvas.drawText(events.get(i).text,l+50,(i+1)*100,paint);
-           // canvas.drawLine(xy[0],xy[1],leftOrRight(events.get(i))?50:l+50,(i+1)*100,paint);
-            //canvas.drawText(events.get(i).text,l/2,dayOrNight(events.get(i))?l:l-distance*2/2,paint);
-//            canvas.restore();
+
+        //画时间区域圆弧
+        canvas.save();
+        paint.setStyle(Paint.Style.STROKE);
+        for(int i=0;i<events.size();i++){
+
+            if(!events.get(i).noEnd()){
+                paint.setColor( Color.parseColor(colors[i%colors.length]));
+                if(dayOrNight(events.get(i).hours)){
+                    if(events.get(i).overDayNight()){
+                        canvas.drawArc(sw/2,sw/2,l-sw/2,l-sw/2,
+                                timeToDegree(getRealMins(events.get(i).hours,events.get(i).minute)-arucstartmins),
+                                timeToDegree(getRealMins(18,0)-getRealMins(events.get(i).hours,events.get(i).minute)),
+                                false,paint);
+
+                        canvas.drawArc(sw/2+distance,sw/2+distance,l-sw/2-distance,l-sw/2-distance,
+                                timeToDegree(getRealMins(18,0)-arucstartmins),
+                                timeToDegree(getRealMins(events.get(i).endHours,events.get(i).endMinute)-getRealMins(18,0)),
+                                false,paint);
+                    }else{
+                        canvas.drawArc(sw/2,sw/2,l-sw/2,l-sw/2,
+                                timeToDegree(getRealMins(events.get(i).hours,events.get(i).minute)-arucstartmins),
+                                timeToDegree(getRealMins(events.get(i).endHours,events.get(i).endMinute)-getRealMins(events.get(i).hours,events.get(i).minute)),
+                                false,paint);
+                    }
+                }else{
+                    if(events.get(i).overDayNight()){
+                        canvas.drawArc(sw/2+distance,sw/2+distance,l-sw/2-distance,l-sw/2-distance,
+                                timeToDegree(getRealMins(events.get(i).hours,events.get(i).minute)-arucstartmins),
+                                timeToDegree(getRealMins(6,0)-getRealMins(events.get(i).hours,events.get(i).minute)),
+                                false,paint);
+                        canvas.drawArc(sw/2,sw/2,l-sw/2,l-sw/2,
+                                timeToDegree(getRealMins(6,0)-arucstartmins),
+                                timeToDegree(getRealMins(events.get(i).endHours,events.get(i).endMinute)-getRealMins(6,0)),
+                                false,paint);
+                    }else{
+                        canvas.drawArc(sw/2+distance,sw/2+distance,l-sw/2-distance,l-sw/2-distance,
+                                timeToDegree(getRealMins(events.get(i).hours,events.get(i).minute)-arucstartmins),
+                                timeToDegree(getRealMins(events.get(i).endHours,events.get(i).endMinute)-getRealMins(events.get(i).hours,events.get(i).minute)),
+                                false,paint);
+                    }
+                }
+            }
         }
         canvas.restore();
+
+
+        canvas.restore();//------------------------------------
+
+        //
+        canvas.save();
+        paint.setStyle(Paint.Style.FILL);
+        canvas.translate(0,padding);
         paint.setStrokeWidth(2);
         paint.setColor(Color.WHITE);
         for(int i=0;i<events.size();i++){
-            int[] xy = getXY(events.get(i),l/2,dayOrNight(events.get(i))?outradius-distance/2:innerradius-distance/2);
+            paint.setColor( Color.parseColor(colors[i%colors.length]));
+            int[] xy = getXY(events.get(i),l/2,dayOrNight(events.get(i).hours)?outradius-distance/2:innerradius-distance/2);
             canvas.drawText(events.get(i).text,leftOrRight(events.get(i))?50: (float) ( (width-l)/2 + 100+l),xy[1],paint);
             canvas.drawLine((float) (xy[0]+ (width-l)/2),xy[1], leftOrRight(events.get(i))?50: (float) ( (width-l)/2 + 100+l),xy[1],paint);
         }
-
+        canvas.restore();
 
         appWidgetManager.updateAppWidget(new ComponentName(context,TimeWidget.class),rv);
 
     }
 
 
-    public boolean dayOrNight(Event event){
-        return (event.hours>=6&&event.hours<18);
+    public boolean dayOrNight(int hour){
+        return (hour>=6&&hour<18);
     }
 
     public int[] getXY(Event event,int r,int radius){
@@ -238,8 +341,20 @@ public class BackRun {
             return new int[]{x,y};
     }
 
-    public int getMins(Event event){
-        return event.hours<6?event.hours*60+event.minute+12*60:event.hours*60+event.minute;
+    public int getMins(int hours,int minute){
+        return  hours<6?hours*60+minute+24*60:hours*60+minute;
+    }
+
+    public int getRealMins(int hours,int minute){
+        return hours*60+minute;
+    }
+
+    public int timeToDegree(int minutes){
+        return minutes/2;
+    }
+
+    public int minToDegree(int minute){
+        return minute*6;
     }
 
     public boolean leftOrRight(Event event){
