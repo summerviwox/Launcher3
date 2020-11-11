@@ -18,6 +18,7 @@ public class EventReceive extends BroadcastReceiver {
         if(System.currentTimeMillis()-time<10*1000){
             return;
         }
+        time = System.currentTimeMillis();
         BackRun.getBackRun().refresh(context);
     }
 }

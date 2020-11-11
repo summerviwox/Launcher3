@@ -84,7 +84,7 @@ public class BackRun {
 
             @Override
             public void onFailure(Call<List<Alarm>> call, Throwable t) {
-
+                Log.e("","");
             }
         });
         BackRun.this.run(context);
@@ -148,7 +148,7 @@ public class BackRun {
         int cx = l/2;//圆心x
         int cy = l/2;//圆心y
         int outradius = l/2;//大圆半径
-        int distance = 40;//圆弧宽度
+        int distance = 60;//圆弧宽度
         int innerradius = l/2 - distance;//内圆半径
         int centerradius = innerradius - distance;//中心圆半径
         Bitmap bitmap =Bitmap.createBitmap((int) (width+padding),l+padding,Bitmap.Config.ARGB_8888);
@@ -214,8 +214,8 @@ public class BackRun {
                 paint.setStrokeWidth(linewidth*2);
                 canvas.drawLine(l/2,distance*2,l/2,length/2+distance*2,paint);
             }else{
-                paint.setStrokeWidth(linewidth);
-                canvas.drawLine(l/2,distance*2,l/2,length/2+distance*2,paint);
+//                paint.setStrokeWidth(linewidth);
+//                canvas.drawLine(l/2,distance*2,l/2,length/2+distance*2,paint);
             }
             canvas.restore();
         }
@@ -229,7 +229,7 @@ public class BackRun {
             canvas.rotate(i*(360/60),cx,cy);
             //canvas.drawLine(l/2,distance,l/2,(i%5==0)?length+distance:length/2+distance,paint);
             if(i%5==0){
-                canvas.drawText(""+(i/5),l/2,length*2+distance,paint);
+                canvas.drawText(""+(i/5),cx,length+distance*2,paint);
             }
             canvas.restore();
         }
@@ -241,15 +241,28 @@ public class BackRun {
         paint.setColor(dayOrNightColor);
         canvas.rotate(mins/2,cx,cy);
         canvas.drawLine(cx,cy,l/2,l/4 ,paint);
-        canvas.restore();
-
-        //分钟刻度
-        canvas.save();
-        paint.setStrokeWidth(linewidth*2);
-        paint.setColor(dayOrNightColor);
-        canvas.rotate(mins*6,cx,cy);
+        paint.setStrokeWidth(linewidth);
         canvas.drawLine(cx,cy,l/2,dayOrNight(Calendar.getInstance().get(Calendar.HOUR_OF_DAY))?distance*2+linewidth*2:distance*2+linewidth*2,paint);
         canvas.restore();
+
+
+
+        paint.setColor(Color.parseColor("#FF0000"));
+        paint.setStyle(Paint.Style.FILL);
+        paint.setStrokeWidth(linewidth/2);
+        paint.setTextSize(40);
+        canvas.drawText(new SimpleDateFormat("HH:mm").format(new Date()),cx,cy,paint);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setTextSize(40);
+
+
+        //分钟刻度
+//        canvas.save();
+//        paint.setStrokeWidth(linewidth*2);
+//        paint.setColor(dayOrNightColor);
+//        canvas.rotate(mins*6,cx,cy);
+//        canvas.drawLine(cx,cy,l/2,dayOrNight(Calendar.getInstance().get(Calendar.HOUR_OF_DAY))?distance*2+linewidth*2:distance*2+linewidth*2,paint);
+//        canvas.restore();
 
 
         //画点
@@ -265,6 +278,7 @@ public class BackRun {
         //画时间区域圆弧
         canvas.save();
         paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(linewidth*4);
         for(int i=0;i<events.size();i++){
 
             if(!events.get(i).noEnd()){
@@ -275,6 +289,8 @@ public class BackRun {
                                 timeToDegree(getRealMins(events.get(i).hours,events.get(i).minute)-arucstartmins),
                                 timeToDegree(getRealMins(18,0)-getRealMins(events.get(i).hours,events.get(i).minute)),
                                 false,paint);
+
+                        canvas.drawLine(cx-linewidth,l-distance/2+linewidth,cx-linewidth,l-3*distance/2-linewidth,paint);
 
                         canvas.drawArc(sw/2+distance,sw/2+distance,l-sw/2-distance,l-sw/2-distance,
                                 timeToDegree(getRealMins(18,0)-arucstartmins),
@@ -292,6 +308,7 @@ public class BackRun {
                                 timeToDegree(getRealMins(events.get(i).hours,events.get(i).minute)-arucstartmins),
                                 timeToDegree(getRealMins(6,0)-getRealMins(events.get(i).hours,events.get(i).minute)),
                                 false,paint);
+                        canvas.drawLine(cx+linewidth,l-distance/2+linewidth,cx+linewidth,l-3*distance/2-linewidth,paint);
                         canvas.drawArc(sw/2,sw/2,l-sw/2,l-sw/2,
                                 timeToDegree(getRealMins(6,0)-arucstartmins),
                                 timeToDegree(getRealMins(events.get(i).endHours,events.get(i).endMinute)-getRealMins(6,0)),
