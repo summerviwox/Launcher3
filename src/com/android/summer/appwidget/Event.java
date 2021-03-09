@@ -14,12 +14,15 @@ public class Event implements Serializable {
 
     public String text;
 
-    public Event(int hours, int minute, int endHours, int endMinute, String text) {
+    public String color;
+
+    public Event(int hours, int minute, int endHours, int endMinute, String text,String color) {
         this.hours = hours;
         this.minute = minute;
         this.endHours = endHours;
         this.endMinute = endMinute;
         this.text = text;
+        this.color = color;
     }
 
     public boolean noEnd(){

@@ -14,7 +14,7 @@ public class HttpUtil  {
         if(instance==null){
             instance = new HttpUtil();
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://222.186.36.75:9999/record-b/")
+                    .baseUrl("https://www.summerviwox.com:444/record-b/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 

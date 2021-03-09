@@ -13,6 +13,16 @@ public class Alarm implements Serializable {
 
     private Long endtime;
 
+    private String color;
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {

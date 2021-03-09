@@ -22,6 +22,10 @@ import android.content.Context;
  * Defines a set of flags used to control various launcher behaviors
  */
 public final class FeatureFlags extends BaseFlags {
+
+    //是否可以滑动切换 NORMAL ALLAPPS 界面
+    public static boolean ALL_APPS_SWIPE_STATE = false;
+
     private FeatureFlags() {
         // Prevent instantiation
     }

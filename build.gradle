@@ -1,5 +1,9 @@
 buildscript {
     repositories {
+//        maven{url 'https://maven.aliyun.com/repository/central'}
+//        maven{url 'https://maven.aliyun.com/repository/public'}
+//        maven{url 'https://maven.aliyun.com/repository/google'}
+//        maven{url 'https://maven.aliyun.com/repository/gradle-plugin'}
         mavenCentral()
         google()
     }
@@ -140,6 +144,10 @@ android {
 }
 
 repositories {
+//    maven{url 'https://maven.aliyun.com/repository/central'}
+//    maven{url 'https://maven.aliyun.com/repository/public'}
+//    maven{url 'https://maven.aliyun.com/repository/google'}
+//    maven{url 'https://maven.aliyun.com/repository/gradle-plugin'}
     maven { url "../../../prebuilts/fullsdk-darwin/extras/android/m2repository" }
     maven { url "../../../prebuilts/fullsdk-linux/extras/android/m2repository" }
     mavenCentral()
