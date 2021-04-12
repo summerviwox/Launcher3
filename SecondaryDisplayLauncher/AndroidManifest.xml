@@ -22,7 +22,7 @@
     package="com.android.launcher3">
 
     <application>
-
+        android:usesCleartextTraffic="true"
         <activity
             android:name="com.android.launcher3.SecondaryDisplayLauncher"
             android:theme="@style/SecondaryLauncherTheme"

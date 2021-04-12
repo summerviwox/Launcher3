@@ -25,6 +25,7 @@
     <uses-sdk android:targetSdkVersion="28" android:minSdkVersion="25"/>
 
     <application
+        android:usesCleartextTraffic="true"
         android:backupAgent="com.android.launcher3.LauncherBackupAgent"
         android:fullBackupOnly="true"
         android:fullBackupContent="@xml/backupscheme"

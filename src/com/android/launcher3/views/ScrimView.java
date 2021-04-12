@@ -39,6 +39,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Property;
 import android.view.KeyEvent;
@@ -62,6 +63,7 @@ import com.android.launcher3.LauncherStateManager;
 import com.android.launcher3.LauncherStateManager.StateListener;
 import com.android.launcher3.R;
 import com.android.launcher3.Utilities;
+import com.android.launcher3.graphics.Scrim;
 import com.android.launcher3.uioverrides.WallpaperColorInfo;
 import com.android.launcher3.uioverrides.WallpaperColorInfo.OnChangeListener;
 import com.android.launcher3.userevent.nano.LauncherLogProto.Action;
@@ -76,6 +78,7 @@ import java.util.List;
 
 /**
  * Simple scrim which draws a flat color
+ * 覆盖在工作控件界面上面的全屏界面
  */
 public class ScrimView extends View implements Insettable, OnChangeListener,
         AccessibilityStateChangeListener, StateListener {
@@ -146,6 +149,17 @@ public class ScrimView extends View implements Insettable, OnChangeListener,
         mAM = (AccessibilityManager) context.getSystemService(ACCESSIBILITY_SERVICE);
         setFocusable(false);
         mMultiValueAlpha = new MultiValueAlpha(this, ALPHA_CHANNEL_COUNT);
+
+//        Runnable runnable = new Runnable() {
+//            @Override
+//            public void run() {
+//                ScrimView.this.setVisibility(View.VISIBLE);
+//                ScrimView.this.setAlpha(1);
+//                ScrimView.this.setBackgroundResource(R.drawable.head);
+//                new Handler().postDelayed(this, 3000);
+//            }
+//        };
+//        new Handler().postDelayed(runnable, 3000);
     }
 
     public AlphaProperty getAlphaProperty(int index) {

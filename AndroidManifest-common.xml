@@ -45,7 +45,7 @@
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
     <uses-permission android:name="android.permission.READ_DEVICE_CONFIG" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
+    <uses-permission android:name="android.permission.INTERNET" />
     <!--
     Permissions required for read/write access to the workspace data. These permission name
     should not conflict with that defined in other apps, as such an app should embed its package
@@ -68,6 +68,7 @@
     <uses-permission android:name="${packageName}.permission.WRITE_SETTINGS" />
 
     <application
+        android:usesCleartextTraffic="true"
         android:backupAgent="com.android.launcher3.LauncherBackupAgent"
         android:fullBackupOnly="true"
         android:fullBackupContent="@xml/backupscheme"
@@ -197,7 +198,7 @@
 <!--            </intent-filter>-->
         </activity>
 
-        <receiver android:name="com.android.summer.appwidget.TimeWidget" android:exported="true" android:enabled="true">
+<!--        <receiver android:name="com.android.summer.appwidget.TimeWidget" android:exported="true" android:enabled="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -205,10 +206,10 @@
             <intent-filter>
                 <action android:name="com.android.launcher3.TimeWidget"/>
             </intent-filter>
-        </receiver>
+        </receiver>-->
 
-        <receiver android:name="com.android.summer.appwidget.EventReceive">
-        </receiver>
+     <!--   <receiver android:name="com.android.summer.appwidget.EventReceive">
+        </receiver>-->
 
     </application>
 </manifest>

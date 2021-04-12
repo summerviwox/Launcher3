@@ -16,5 +16,5 @@ public interface LauncherService {
     Call<Object> cancleShutDown();
 
     @GET("alarm/selectAll")
-    Call<List<Alarm>> selectAll(@Query("token") String token);
+    Call<BaseRes<List<Alarm>>> selectAll(@Query("token") String token);
 }

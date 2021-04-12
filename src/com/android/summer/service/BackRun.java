@@ -27,6 +27,7 @@ import com.android.summer.appwidget.TimeWidget;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.summer.logic.Alarm;
+import com.summer.logic.BaseRes;
 import com.summer.logic.HttpUtil;
 
 import java.text.SimpleDateFormat;
@@ -72,12 +73,13 @@ public class BackRun {
 
     public void start(Context context){
         events = new Gson().fromJson(context.getSharedPreferences("launcer3",Context.MODE_PRIVATE).getString("alarms","[]"),new TypeToken<List<Event>>(){}.getType());
-        HttpUtil.getInstance().selectAll("3f68f2ec608ba5068816dce9ae6cb4a6").enqueue(new Callback<List<Alarm>>() {
+        HttpUtil.getInstance().selectAll("3f68f2ec608ba5068816dce9ae6cb4a6").enqueue(new Callback<BaseRes<List<Alarm>>>() {
+
             @Override
-            public void onResponse(Call<List<Alarm>> call, Response<List<Alarm>> response) {
-               // Log.e("onResponse",new Gson().toJson(response));
+            public void onResponse(Call<BaseRes<List<Alarm>>> call, Response<BaseRes<List<Alarm>>> response) {
+                 //Log.e("onResponse",new Gson().toJson(response.body()));
                 if(response.isSuccessful()||response.body()!=null){
-                    List<Alarm> alarms = response.body();
+                    List<Alarm> alarms = response.body().getData();
                     events.clear();
                     for(int i=0;i<alarms.size();i++){
                         Calendar calendar = Calendar.getInstance();
@@ -92,8 +94,8 @@ public class BackRun {
             }
 
             @Override
-            public void onFailure(Call<List<Alarm>> call, Throwable t) {
-                Log.e("","");
+            public void onFailure(Call<BaseRes<List<Alarm>>> call, Throwable t) {
+
             }
         });
         BackRun.this.run(context);
@@ -111,12 +113,13 @@ public class BackRun {
     }
 
     public void refresh(Context context){
-        HttpUtil.getInstance().selectAll("summerviwox").enqueue(new Callback<List<Alarm>>() {
+        HttpUtil.getInstance().selectAll("summerviwox").enqueue(new Callback<BaseRes<List<Alarm>>>() {
+
             @Override
-            public void onResponse(Call<List<Alarm>> call, Response<List<Alarm>> response) {
+            public void onResponse(Call<BaseRes<List<Alarm>>> call, Response<BaseRes<List<Alarm>>> response) {
                 //Log.e("onResponse",new Gson().toJson(response));
                 if(response.isSuccessful()||response.body()!=null){
-                    List<Alarm> alarms = response.body();
+                    List<Alarm> alarms = response.body().getData();
                     events.clear();
                     for(int i=0;i<alarms.size();i++){
                         Calendar calendar = Calendar.getInstance();
@@ -131,7 +134,7 @@ public class BackRun {
             }
 
             @Override
-            public void onFailure(Call<List<Alarm>> call, Throwable t) {
+            public void onFailure(Call<BaseRes<List<Alarm>>> call, Throwable t) {
 
             }
         });

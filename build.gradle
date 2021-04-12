@@ -152,6 +152,7 @@ repositories {
     maven { url "../../../prebuilts/fullsdk-linux/extras/android/m2repository" }
     mavenCentral()
     google()
+    jcenter()
 }
 
 dependencies {
@@ -162,6 +163,11 @@ dependencies {
     implementation project(':IconLoader')
     implementation fileTree(dir: "${ANDROID_TOP}/libs", include: 'launcher_protos.jar')
     implementation project(path: ':logic')
+
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+
+    implementation 'com.blankj:utilcodex:1.30.6'
 
     // Recents lib dependency
     withQuickstepImplementation fileTree(dir: "${ANDROID_TOP}/quickstep/libs", include: 'sysui_shared.jar')

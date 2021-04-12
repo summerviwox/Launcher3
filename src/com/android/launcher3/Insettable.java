@@ -21,6 +21,7 @@ import android.graphics.Rect;
 /**
  * Allows the implementing {@link View} to not draw underneath system bars.
  * e.g., notification bar on top and home key area on the bottom.
+ * 状态栏铺满接口 在launcher.xml 布局中加入的子控件 只要实现它就能生效
  */
 public interface Insettable {
 

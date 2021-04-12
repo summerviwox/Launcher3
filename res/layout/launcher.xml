@@ -20,6 +20,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
+
     <com.android.launcher3.dragndrop.DragLayer
         android:id="@+id/drag_layer"
         android:layout_width="match_parent"
@@ -27,6 +28,8 @@
         android:clipChildren="false"
         android:clipToPadding="false"
         android:importantForAccessibility="no">
+
+
 
         <!-- The workspace contains 5 screens of cells -->
         <!-- DO NOT CHANGE THE ID -->
@@ -43,13 +46,16 @@
             android:id="@+id/hotseat"
             layout="@layout/hotseat" />
 
+
+
+        <!--这个说是长按屏幕出现的壁纸小部件预览 但是没有找到-->
         <include
             android:id="@+id/overview_panel"
             layout="@layout/overview_panel"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <!-- Keep these behind the workspace so that they are not visible when
-         we go into AllApps -->
+         we go into AllApps 工作空间底部分页条 -->
         <com.android.launcher3.pageindicators.WorkspacePageIndicator
             android:id="@+id/page_indicator"
             android:layout_width="match_parent"
@@ -61,6 +67,7 @@
             android:id="@+id/drop_target_bar"
             layout="@layout/drop_target_bar" />
 
+        <!--工作空间覆盖的背景-->
         <include
             android:id="@+id/scrim_view"
             layout="@layout/scrim_view" />
@@ -72,5 +79,14 @@
             android:layout_height="match_parent" />
 
     </com.android.launcher3.dragndrop.DragLayer>
+
+
+    <!--一个覆盖在主屏幕底部的自定义view-->
+    <com.android.summer.view.DayView
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 
 </com.android.launcher3.LauncherRootView>
