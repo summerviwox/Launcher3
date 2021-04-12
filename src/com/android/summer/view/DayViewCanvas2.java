@@ -58,7 +58,7 @@ public class DayViewCanvas2 {
     public void draw(Canvas canvas){
         canvas.save();
         drawBorder2(canvas);
-        drawTimePoint(canvas);
+        drawTimeRect(canvas);
         drawTimeText(canvas);
         drawCurentTime(canvas);
         canvas.restore();
@@ -85,6 +85,46 @@ public class DayViewCanvas2 {
             }else{
                 canvas.drawCircle(reallyPoints[i][0],reallyPoints[i][1],timearroundwidthheight/2,paint);
             }
+        }
+        canvas.restore();
+    }
+
+    private void drawTimeRect(Canvas canvas){
+        canvas.save();
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(Color.BLACK);
+        float[] thispoint;
+        for(int i=0;i<reallyPoints.length;i++){
+            canvas.save();
+
+            if(i==4||i==8||i==16||i==20){
+                thispoint = new float[]{
+                        (float) (reallyPoints[i][0]+points[i][3]*roundRectRadious*0.3),
+                        (float) (reallyPoints[i][1]+points[i][4]*roundRectRadious*0.3)};
+                canvas.rotate(-45,thispoint[0],thispoint[1]);
+            }else{
+                thispoint = reallyPoints[i];
+            }
+
+
+            if(points[i][0]%2==0){
+                canvas.drawRect(
+                        thispoint[0]-timearroundwidthheight/4,
+                        thispoint[1]-timearroundwidthheight/2,
+                        thispoint[0]+timearroundwidthheight/4,
+                        thispoint[1]+timearroundwidthheight/2,
+                        paint
+                );
+            }else{
+                canvas.drawRect(
+                        thispoint[0]-timearroundwidthheight/2,
+                        thispoint[1]-timearroundwidthheight/4,
+                        thispoint[0]+timearroundwidthheight/2,
+                        thispoint[1]+timearroundwidthheight/4,
+                        paint
+                );
+            }
+            canvas.restore();
         }
         canvas.restore();
     }
