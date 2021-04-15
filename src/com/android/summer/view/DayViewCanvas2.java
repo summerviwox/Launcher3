@@ -1,11 +1,8 @@
 package com.android.summer.view;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.view.View;
 
 import com.blankj.utilcode.util.LogUtils;
@@ -29,7 +26,7 @@ public class DayViewCanvas2 {
             {1,4,0,-1,1},{1,4,1,-1,0},{1,4,2,-1,0},{1,4,3,-1,0},//20,21,22,23
     };
 
-    float[][] dirct = new float[][]{{1,0},{0,1},{-1,0},{0,-1}};
+    float[][] linegodirct = new float[][]{{1,0},{0,1},{-1,0},{0,-1}};
 
     float[][] reallyPoints = new float[24][2];
     float timearroundwidthheight = 35;
@@ -57,11 +54,16 @@ public class DayViewCanvas2 {
 
     public void draw(Canvas canvas){
         canvas.save();
+        drawBorder3(canvas);
         drawBorder2(canvas);
         drawTimeRect(canvas);
         drawTimeText(canvas);
-        drawCurentTime(canvas);
+        //drawCurentTime(canvas);
         canvas.restore();
+
+    }
+
+    private void drawBorder3(Canvas canvas){
 
     }
 
@@ -96,6 +98,10 @@ public class DayViewCanvas2 {
         float[] thispoint;
         for(int i=0;i<reallyPoints.length;i++){
             canvas.save();
+
+            if(i%2==1){
+                continue;
+            }
 
             if(i==4||i==8||i==16||i==20){
                 thispoint = new float[]{
@@ -136,6 +142,12 @@ public class DayViewCanvas2 {
         paint.setColor(Color.WHITE);
         int textshift = (int) ((paint.getFontMetrics().top+paint.getFontMetrics().bottom)/2);
         for(int i=0;i<reallyPoints.length;i++){
+
+            if(i%2==1){
+                continue;
+            }
+
+            
             if(i==4||i==8||i==16||i==20){
                 canvas.drawText(i+"",
                         (float) (reallyPoints[i][0]+points[i][3]*roundRectRadious*0.3),
@@ -156,7 +168,8 @@ public class DayViewCanvas2 {
 
        paint.setStrokeWidth(timepointlinewidth/2);
         paint.setColor(Color.RED);
-
+        float[] thislinedirect = (float[]) linegodirct[points[hour][0]];
+        float thisblocklength = thislinedirect[0]==0?blockheight:blockwidth;
         if(hour==3||hour==4||hour==7||hour==8||hour==15||hour==16||hour==19||hour==20){
             float[] thisround;
             switch (hour){
@@ -189,9 +202,8 @@ public class DayViewCanvas2 {
                     break;
             }
 
-            float[] thislinedirect = (float[]) dirct[points[hour][0]];
+
             float roundlength = (float) (Math.PI*roundRectRadious/4);//pi*r/4
-            float thisblocklength = thislinedirect[0]==0?blockheight:blockwidth;
             float linelength = thisblocklength-roundRectRadious;
             float alllength = linelength + roundlength;
             float linepercent = linelength/alllength;//直线百分比
@@ -269,10 +281,31 @@ public class DayViewCanvas2 {
             canvas.drawLine(
                     reallyPoints[hour][0],
                     reallyPoints[hour][1],
-                    reallyPoints[hour][0]+dirct[points[hour][0]][0]*blockwidth*minite/60,
-                    reallyPoints[hour][1]+dirct[points[hour][0]][1]*blockwidth*minite/60,
+                    reallyPoints[hour][0]+ linegodirct[points[hour][0]][0]*thisblocklength*minite/60,
+                    reallyPoints[hour][1]+ linegodirct[points[hour][0]][1]*thisblocklength*minite/60,
                     paint
             );
         }
+        switch (points[hour][0]){
+            case 0:
+                paint.setTextAlign(Paint.Align.CENTER);
+                break;
+            case 1:
+                paint.setTextAlign(Paint.Align.RIGHT);
+                break;
+            case 2:
+                paint.setTextAlign(Paint.Align.CENTER);
+                break;
+            case 3:
+                paint.setTextAlign(Paint.Align.LEFT);
+                break;
+        }
+        paint.setColor(Color.RED);
+        paint.setTextSize(timeTextSize);
+        canvas.drawText("    "+hour+":"+minite+"    ",
+                reallyPoints[hour][0]+ linegodirct[points[hour][0]][0]*thisblocklength*minite/60,
+                reallyPoints[hour][1]+ linegodirct[points[hour][0]][1]*thisblocklength*minite/60,
+                paint
+        );
     }
 }

@@ -50,7 +50,7 @@ public class DayView extends View implements View.OnClickListener,Insettable {
 
     ArrayList<Event> events = new ArrayList<>();
 
-    DayViewCanvas2 dayViewCanvas;
+    DayViewCanvas5 dayViewCanvas;
 
     public void registTimeTick(Context context){
         IntentFilter filter= new IntentFilter();
@@ -62,7 +62,7 @@ public class DayView extends View implements View.OnClickListener,Insettable {
         super(context, attrs);
         registTimeTick(context);
         setOnClickListener(this);
-      //  setClickable(false);
+        setClickable(false);
         getDataFromServer();
     }
 
@@ -105,7 +105,7 @@ public class DayView extends View implements View.OnClickListener,Insettable {
     @Override
     protected void onDraw(Canvas canvas) {
         if(dayViewCanvas==null){
-            dayViewCanvas = new DayViewCanvas2(DayView.this);
+            dayViewCanvas = new DayViewCanvas5(DayView.this);
         }
         dayViewCanvas.draw(canvas);
     }
@@ -125,7 +125,7 @@ public class DayView extends View implements View.OnClickListener,Insettable {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(Intent.ACTION_TIME_TICK)) {
-                ToastUtils.showLong("123"+intent.getDataString());
+               // ToastUtils.showLong("123"+intent.getDataString());
                 DayView.this.invalidate();
             }
         }
