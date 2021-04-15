@@ -1,5 +1,7 @@
 package com.android.summer.appwidget;
 
+import com.blankj.utilcode.util.LogUtils;
+
 import java.io.Serializable;
 
 public class Event implements Serializable {
@@ -16,7 +18,9 @@ public class Event implements Serializable {
 
     public String color;
 
+
     public Event(int hours, int minute, int endHours, int endMinute, String text,String color) {
+        LogUtils.e(hours,minute,endHours,endMinute,text,color);
         this.hours = hours;
         this.minute = minute;
         this.endHours = endHours;
@@ -35,5 +39,17 @@ public class Event implements Serializable {
 
     public boolean dayOrNight(int hour){
         return (hour>=6&&hour<18);
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "hours=" + hours +
+                ", minute=" + minute +
+                ", endHours=" + endHours +
+                ", endMinute=" + endMinute +
+                ", text='" + text + '\'' +
+                ", color='" + color + '\'' +
+                '}';
     }
 }

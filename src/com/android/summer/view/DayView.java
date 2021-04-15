@@ -75,7 +75,7 @@ public class DayView extends View implements View.OnClickListener,Insettable {
     void getDataFromServer(){
         invalidate();
 
-     /*   events = new Gson().fromJson(getContext().getSharedPreferences("launcer3",Context.MODE_PRIVATE).getString("alarms","[]"),new TypeToken<List<Event>>(){}.getType());
+        events = new Gson().fromJson(getContext().getSharedPreferences("launcer3",Context.MODE_PRIVATE).getString("alarms","[]"),new TypeToken<List<Event>>(){}.getType());
         HttpUtil.getInstance().selectAll("3f68f2ec608ba5068816dce9ae6cb4a6").enqueue(new Callback<BaseRes<List<Alarm>>>() {
             @Override
             public void onResponse(Call<BaseRes<List<Alarm>>> call, Response<BaseRes<List<Alarm>>> response) {
@@ -99,7 +99,7 @@ public class DayView extends View implements View.OnClickListener,Insettable {
             public void onFailure(Call<BaseRes<List<Alarm>>> call, Throwable t) {
                 Log.e("onFailure",t.getLocalizedMessage());
             }
-        });*/
+        });
     }
 
     @Override
@@ -130,4 +130,12 @@ public class DayView extends View implements View.OnClickListener,Insettable {
             }
         }
     };
+
+    public ArrayList<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(ArrayList<Event> events) {
+        this.events = events;
+    }
 }
