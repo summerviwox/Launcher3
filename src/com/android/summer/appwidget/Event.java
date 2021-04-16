@@ -20,7 +20,6 @@ public class Event implements Serializable {
 
 
     public Event(int hours, int minute, int endHours, int endMinute, String text,String color) {
-        LogUtils.e(hours,minute,endHours,endMinute,text,color);
         this.hours = hours;
         this.minute = minute;
         this.endHours = endHours;
