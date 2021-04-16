@@ -11,6 +11,7 @@ import com.blankj.utilcode.util.LogUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.function.Predicate;
 
 public class DayViewCanvas5 {
 
@@ -23,8 +24,11 @@ public class DayViewCanvas5 {
     float planTextSize = 35;
     float planTextStrokWidth = 6;
     int hourTextColor = Color.parseColor("#000000");
-    float hourTextSize = 30;
+    float hourTextSize = 25;
+    int currentHourTextColor = Color.parseColor("#ff0000");
+    float currentHourTextSize = 40;
     float hourTextStrokeWidth = 16;
+    int borderColor = Color.parseColor("#bbbbbb");
 
     public DayViewCanvas5(DayView dayView) {
         this.dayView = dayView;
@@ -149,7 +153,7 @@ public class DayViewCanvas5 {
         RectF borderRect;
         float borderRadious;
         int borderColor;
-        borderRadious =100;
+        borderRadious =80;
         float borderRectWidth;
         float borderRectHeight;
         float borderRectWidth_4;
@@ -264,20 +268,28 @@ public class DayViewCanvas5 {
         pointList.addAll(point0611);
         pointList.addAll(point1217);
         pointList.addAll(point1823);
-        LogUtils.e(123,pointList.size());
+
+        ArrayList<Point> points = new ArrayList<>();
+        for(int i=18*60;i<24*60;i++){
+            points.add(pointList.get(i));
+        }
+        pointList.removeAll(points);
+        pointList.addAll(0,points);
         return pointList;
     }
 
     public void draw(Canvas canvas){
         drawBorder(canvas);
         drawMinutePoint(canvas);
-
-        drawLine(canvas);
         drawCurrentMinute(canvas);
         drawPlan(canvas);
         drawCurrentHour(canvas);
         drawHourPoint(canvas);
         drawHourText(canvas);
+
+//        for(int i=0;i<100;i++){
+//            canvas.drawCircle(pointList.get(i).x,pointList.get(i).y,10,paint);
+//        }
       //  paint.setStrokeWidth(1);
      //   canvas.drawLine(0,height/2,width,height/2,paint);
       //  canvas.drawLine(40,0,40,height,paint);
@@ -286,7 +298,7 @@ public class DayViewCanvas5 {
     private void drawBorder(Canvas canvas){
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(borderlength);
-        paint.setColor(Color.parseColor("#cccccc"));
+        paint.setColor(borderColor);
         Path path = new Path();
         for(int i=0;i<pointList.size();i++){
             Point point = pointList.get(i);
@@ -312,36 +324,28 @@ public class DayViewCanvas5 {
     }
 
     private void drawMinutePoint(Canvas canvas){
-        paint.setColor(Color.WHITE);
-        paint.setStyle(Paint.Style.FILL);
-        for(int i=0;i<innerPointList.size();i++){
+        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setStrokeWidth(2);
+        float shift = (paint.getFontMetrics().top+paint.getFontMetrics().bottom)/2;
+        for(int i=0;i<pointList.size();i++){
             if(i%24==0){
-                Point point = innerPointList.get(i);
-                canvas.drawCircle(point.x, point.y,i%120==0?10:5, paint);
+                Point point = pointList.get(i);
+
+                if(i%120==0){
+//                    paint.setStyle(Paint.Style.FILL);
+//                    paint.setColor(Color.BLACK);
+//                    canvas.drawCircle(point.x, point.y,10, paint);
+                    paint.setStyle(Paint.Style.FILL);
+                    paint.setColor(Color.WHITE);
+                    canvas.drawCircle(point.x, point.y,8, paint);
+                   // canvas.drawText((i/120)+"",point.x,point.y-shift,paint);
+                }else{
+                  //  canvas.drawCircle(point.x, point.y,5, paint);
+                }
             }
         }
     }
 
-    private void drawLine(Canvas canvas){
-        Path path = new Path();
-        paint.setStrokeWidth(10f);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setColor(Color.RED);
-        int startPoint = getTimePoint(Calendar.getInstance());
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.HOUR_OF_DAY,23);
-        int endPoint = getTimePoint(calendar);
-        if(endPoint<startPoint){
-            endPoint +=pointList.size();
-        }
-        path.moveTo(pointList.get(startPoint).x,pointList.get(startPoint).y);
-        //path.lineTo(pointList.get(endPoint%pointList.size()).x,pointList.get(endPoint%pointList.size()).y);
-        for(int i=startPoint;i<endPoint;i++){
-          //  path.lineTo(pointList.get(i%pointList.size()).x,pointList.get(i%pointList.size()).y);
-        }
-       // canvas.drawCircle(100,100,40,paint);
-        canvas.drawPath(path,paint);
-    }
 
     private void drawHourText(Canvas canvas){
         paint.setStrokeWidth(hourTextStrokeWidth);
@@ -353,7 +357,14 @@ public class DayViewCanvas5 {
         float shift = (paint.getFontMetrics().top+paint.getFontMetrics().bottom)/2;
         for(int i=0;i<pointList.size();i++){
             if(i%120==0){
-                canvas.drawText((i/60)+"",pointList.get(i).x,pointList.get(i).y-shift,paint);
+//                canvas.drawText(getTimeString(i/60)+"-"+getTimeString(i/24),pointList.get(i).x,pointList.get(i).y-shift,paint);
+                paint.setColor(hourTextColor);
+                paint.setTextSize(hourTextSize);
+                if(Calendar.getInstance().get(Calendar.HOUR_OF_DAY)==(i/60)){
+                    paint.setColor(currentHourTextColor);
+                    paint.setTextSize(currentHourTextSize);
+                }
+                canvas.drawText(getTimeString(i/60),pointList.get(i).x,pointList.get(i).y-shift,paint);
             }
         }
     }
@@ -363,19 +374,23 @@ public class DayViewCanvas5 {
         paint.setColor(Color.RED);
         paint.setStrokeWidth(5);
         Calendar calendar = Calendar.getInstance();
-        int count = ((calendar.get(Calendar.MINUTE))*24-60*6);
+        int count = ((calendar.get(Calendar.MINUTE))*24);
         if(count<0){
             count += innerPointList.size();
         }
         Point minutePoint = innerPointList.get(count);
         paint.setColor(Color.WHITE);
         canvas.drawLine(width/2,height/2,minutePoint.x,minutePoint.y,paint);
+        //canvas.drawCircle(minutePoint.x,minutePoint.y,10,paint);
+        float shift = (paint.getFontMetrics().top+paint.getFontMetrics().bottom)/2;
+        canvas.drawText(getTimeString(calendar.get(Calendar.MINUTE)),minutePoint.x,minutePoint.y-shift,paint);
+
     }
 
 
     private void drawCurrentHour(Canvas canvas){
         paint.setColor(Color.RED);
-        paint.setStrokeWidth(5);
+        paint.setStrokeWidth(4);
         paint.setStyle(Paint.Style.STROKE);
         int startIndex = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)*60;
         int endIndex = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)*60+Calendar.getInstance().get(Calendar.MINUTE);
@@ -390,7 +405,17 @@ public class DayViewCanvas5 {
         canvas.drawPath(path,paint);
 
         canvas.drawLine(width/2,height/2,hourEndPoint.x,hourEndPoint.y,paint);
-        canvas.drawCircle(hourStartPoint.x,hourStartPoint.y,12,paint);
+        //canvas.drawCircle(hourEndPoint.x,hourEndPoint.y,borderlength*80/100,paint);
+        if(startIndex%120!=0){
+            paint.setStrokeWidth(hourTextStrokeWidth);
+            paint.setFakeBoldText(true);
+            paint.setColor(currentHourTextColor);
+            paint.setTextSize(currentHourTextSize);
+            paint.setStyle(Paint.Style.FILL);
+            paint.setTextAlign(Paint.Align.CENTER);
+            float shift = (paint.getFontMetrics().top+paint.getFontMetrics().bottom)/2;
+            canvas.drawText(getTimeString(startIndex/60),hourStartPoint.x,hourStartPoint.y-shift,paint);
+        }
     }
 
     private void drawPlan(Canvas canvas){
@@ -420,6 +445,13 @@ public class DayViewCanvas5 {
 
     private int getTimePoint(Calendar calendar){
         return calendar.get(Calendar.HOUR_OF_DAY)*60+calendar.get(Calendar.MINUTE);
+    }
+
+    private String getTimeString(int hour){
+        if(hour<10){
+            return "0"+hour;
+        }
+        return hour+"";
     }
 
 }
